@@ -11,7 +11,10 @@
 int main(int argc, char * argv[] ){
 	WINDOW * directory= NULL;
 	WINDOW * secondWindow = NULL;
+	WINDOW * thirdWindow = NULL;
+	int y,x = 0;
 	/** Window initialization **/
+
 	// This ensures our prefered locale settings are used (like character sets)
 	setlocale(LC_ALL,"");
 	// recommended function sequence for curses to work in a terminal
@@ -27,15 +30,22 @@ int main(int argc, char * argv[] ){
 
 	
 	/** END Setting Hotkeys **/
+	getmaxyx(directory, y,x);
+	printf("y:%d x:%d", y, x);
+//	return endwin();
+
+	secondWindow = subwin(directory, y-1,x/2-1,0,0);
 	
-	secondWindow = derwin(directory, 5,5,5,5);
+	thirdWindow = subwin(directory, y-1, x/2-1,
+				0, x+1/2);
+
 	/** Main loop where things will actually happen **/
 	while(1){
-		addstr("dafkjdas;fasfj;askf");
-		waddstr(secondWindow, "asdfdafa");
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+		waddstr(secondWindow, "FFFFFFFF");
+		waddstr(thirdWindow, "GGGGGG");
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		wrefresh(secondWindow);
-		refresh();
+		wrefresh(thirdWindow);
 	}
 	
 	return endwin();
