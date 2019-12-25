@@ -1,10 +1,16 @@
 #include <curses.h> // general curses stuff
 #include <locale.h> // for setlocale() in main()
 
+
 #include <cstdlib>
 #include <stdio.h>
 #include <chrono>
 #include <thread>
+
+/* TODO:
+ * A) resize subwindows and contents
+ *
+ * */
 
 #define printerr(err) fprintf(stderr, err);
 
@@ -12,7 +18,7 @@ int main(int argc, char * argv[] ){
 	WINDOW * directory= NULL;
 	WINDOW * secondWindow = NULL;
 	WINDOW * thirdWindow = NULL;
-	int y,x = 0;
+	int nlines, ncols = 0;
 	/** Window initialization **/
 
 	// This ensures our prefered locale settings are used (like character sets)
@@ -28,22 +34,28 @@ int main(int argc, char * argv[] ){
 
 	/** Setting Hotkeys **/
 
-	
 	/** END Setting Hotkeys **/
-	getmaxyx(directory, y,x);
-	printf("y:%d x:%d", y, x);
+	getmaxyx(directory, nlines,ncols);
 //	return endwin();
-
-	secondWindow = subwin(directory, y-1,x/2-1,0,0);
+	secondWindow = subwin(directory, nlines-1,ncols/2,0,0);
 	
-	thirdWindow = subwin(directory, y-1, x/2-1,
-				0, x+1/2);
-
+	thirdWindow = subwin(directory, nlines-1, (ncols+1)/2,
+				0, (ncols)/2);
 	/** Main loop where things will actually happen **/
-	while(1){
-		waddstr(secondWindow, "FFFFFFFF");
-		waddstr(thirdWindow, "GGGGGG");
+	for(int i = 0; 1; ++i){
+		if( i  < 20){
+			waddstr(secondWindow, "FFFFFFFF");
+			waddstr(thirdWindow, "GGGGGGGG");
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		if(is_term_resized(nlines, ncols)){
+			getmaxyx(directory,nlines,ncols);
+			/* A) RESIZE SUBWINDOWS AND CONTENTS */
+		}
+		if(i > 20){
+			wmove(thirdWindow, 10,10);
+			wmove(secondWindow, 10,10);
+		}
 		wrefresh(secondWindow);
 		wrefresh(thirdWindow);
 	}
