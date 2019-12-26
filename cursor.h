@@ -5,4 +5,4 @@ typedef struct {
 
 } cursor;
 
-char init_cursor(cursor * c, WINDOW * w, int x, int y)
+char init_cursor(cursor * c, WINDOW * w, int x, int y);

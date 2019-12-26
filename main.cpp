@@ -7,9 +7,13 @@
 #include <chrono>
 #include <thread>
 
+#include "cursor.h"
+
 /* TODO:
  * A) resize subwindows and contents
- *
+ * B) DONT use refresh, use wrefresh. If you want to know why read specifics on what "initscr" 
+ * returns to directory and what "refresh()" does (It doesn't refresh directory, exactly, it's like 
+ * "stdscrn"
  * */
 
 #define printerr(err) fprintf(stderr, err);
@@ -47,17 +51,26 @@ int main(int argc, char * argv[] ){
 			waddstr(secondWindow, "FFFFFFFF");
 			waddstr(thirdWindow, "GGGGGGGG");
 		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		if(is_term_resized(nlines, ncols)){
 			getmaxyx(directory,nlines,ncols);
 			/* A) RESIZE SUBWINDOWS AND CONTENTS */
 		}
 		if(i > 20){
-			wmove(thirdWindow, 10,10);
-			wmove(secondWindow, 10,10);
+			printf("%d\n", wmove(thirdWindow, 10,10));
+			printf("OK%d ERR%d\n", OK,ERR);
+			std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+			break;
 		}
+		
+		//if(i > 25)
+		//	wmove(secondWindow, 12,12);
+
 		wrefresh(secondWindow);
+		wrefresh(directory);
 		wrefresh(thirdWindow);
+		//refresh(); // Right now, refreshing the window when moving the cursor into the 
+		//third window causes the cursor to move relative to WINDOW *directory
 	}
 	
 	return endwin();
