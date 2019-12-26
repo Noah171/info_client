@@ -14,6 +14,8 @@
  * B) DONT use refresh, use wrefresh. If you want to know why read specifics on what "initscr" 
  * returns to directory and what "refresh()" does (It doesn't refresh directory, exactly, it's like 
  * "stdscrn"
+ * C) Note that the way refresh is working is odd. Test the code as is and notice that wmoving the
+ * cursor results in unexpected behaviour based on the documentation of wrefresh and wmove
  * */
 
 #define printerr(err) fprintf(stderr, err);
@@ -56,18 +58,20 @@ int main(int argc, char * argv[] ){
 			getmaxyx(directory,nlines,ncols);
 			/* A) RESIZE SUBWINDOWS AND CONTENTS */
 		}
-		if(i > 20){
-			printf("%d\n", wmove(thirdWindow, 10,10));
+		if(i > 20 && i < 25){
+			printf("%d\n", wmove(thirdWindow, 0,0));
 			printf("OK%d ERR%d\n", OK,ERR);
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		}
+		
+		if(i > 25){
+			wmove(secondWindow, 12,12);
 			std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 			break;
 		}
-		
-		//if(i > 25)
-		//	wmove(secondWindow, 12,12);
 
-		wrefresh(secondWindow);
-		wrefresh(directory);
+		//wrefresh(secondWindow);
+		//wrefresh(directory);
 		wrefresh(thirdWindow);
 		//refresh(); // Right now, refreshing the window when moving the cursor into the 
 		//third window causes the cursor to move relative to WINDOW *directory
