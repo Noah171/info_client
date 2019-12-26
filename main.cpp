@@ -61,18 +61,31 @@ int main(int argc, char * argv[] ){
 		if(i > 20 && i < 25){
 			printf("%d\n", wmove(thirdWindow, 0,0));
 			printf("OK%d ERR%d\n", OK,ERR);
+			wrefresh(thirdWindow);
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
 		}
 		
-		if(i > 25){
-			wmove(secondWindow, 12,12);
-			std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-			break;
+		if(i > 25 && i < 30){
+			wrefresh(secondWindow);
+			wmove(secondWindow, 22,12);
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			wrefresh(secondWindow);
+		}
+		if(i > 30){
+			wrefresh(thirdWindow);
+			wmove(thirdWindow, 22,32);
+			waddstr(thirdWindow, "GGGGGGGG");
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			wrefresh(secondWindow);
+			waddstr(thirdWindow, "GGGGGGG");
+			wrefresh(secondWindow);
+			waddstr(secondWindow, "FFFFFFF");
 		}
 
 		//wrefresh(secondWindow);
 		//wrefresh(directory);
-		wrefresh(thirdWindow);
+		//wrefresh(thirdWindow);
 		//refresh(); // Right now, refreshing the window when moving the cursor into the 
 		//third window causes the cursor to move relative to WINDOW *directory
 	}
