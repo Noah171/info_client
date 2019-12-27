@@ -8,29 +8,31 @@
 #include <thread>
 
 #include "cursor.h"
+#include "media_info_storage.h"
 
 /* TODO:
  * A) resize subwindows and contents
- * B) DONT use refresh, use wrefresh. If you want to know why read specifics on what "initscr" 
- * returns to directory and what "refresh()" does (It doesn't refresh directory, exactly, it's like 
+*/
+/* NOTES:
+ * A) DONT use refresh, use wrefresh. If you want to know why read specifics on what "initscr" 
+ * returns to super and what "refresh()" does (It doesn't refresh super, exactly, it's like 
  * "stdscrn"
- * C) Note that the way refresh is working is odd. Test the code as is and notice that wmoving the
- * cursor results in unexpected behaviour based on the documentation of wrefresh and wmove
- * */
-
+ * B) Note that the way refresh works is odd.
+ *
+ */
 #define printerr(err) fprintf(stderr, err);
 
 int main(int argc, char * argv[] ){
-	WINDOW * directory= NULL;
-	WINDOW * secondWindow = NULL;
-	WINDOW * thirdWindow = NULL;
+	WINDOW * super = NULL;
+	WINDOW * media = NULL;
+	char * mediaTypes [] = NULL;
 	int nlines, ncols = 0;
 	/** Window initialization **/
 
 	// This ensures our prefered locale settings are used (like character sets)
 	setlocale(LC_ALL,"");
 	// recommended function sequence for curses to work in a terminal
-	directory = initscr();
+	super = initscr();
 	cbreak();
 	noecho();
 	// Some optional calls that most programs use according to 'man ncurses'
@@ -41,12 +43,18 @@ int main(int argc, char * argv[] ){
 	/** Setting Hotkeys **/
 
 	/** END Setting Hotkeys **/
-	getmaxyx(directory, nlines,ncols);
+	// Gets the current terminal size and stores it in nlines and ncols, because it is a macro
+	// nlines and ncols can be changed directly without pointers.
+	getmaxyx(super, nlines,ncols);
 //	return endwin();
-	secondWindow = subwin(directory, nlines-1,ncols/2,0,0);
+
+	// Get contents of media directory because that will decide the size of media window
+	 getFileNames(mediaTypes, DIRECTORY);
+	/* Make initial window to display current working directory */
+
+	currentDirWindow = subwin(directory, nlines-1,ncols/2,0,0);
 	
-	thirdWindow = subwin(directory, nlines-1, (ncols+1)/2,
-				0, (ncols)/2);
+	
 	/** Main loop where things will actually happen **/
 	for(int i = 0; 1; ++i){
 		if( i  < 20){
