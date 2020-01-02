@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <chrono>
 #include <thread>
+#include <errno.h>
 
 #include "cursor.hpp"
 #include "media_info.hpp"
@@ -26,10 +27,9 @@ int main(int argc, char * argv[] ){
 	WINDOW * super = NULL;
 	WINDOW * media = NULL;
 	char ** mediaTypes = NULL;
-	int nlines, ncols = 0;
+	int nlines = 0, ncols = 0, nnames = 0;
 
 	/** Window initialization **/
-
 	// This ensures our prefered locale settings are used (like character sets)
 	setlocale(LC_ALL,"");
 	// recommended function sequence for curses to work in a terminal
@@ -44,14 +44,15 @@ int main(int argc, char * argv[] ){
 	/** Setting Hotkeys **/
 
 	/** END Setting Hotkeys **/
+
 	// Gets the current terminal size and stores it in nlines and ncols, because it is a macro
 	// nlines and ncols can be changed directly without pointers.
 	getmaxyx(super, nlines,ncols);
-//	return endwin();
 
 	// Get contents of media directory because that will decide the size of media window
-	ncols = getFileNames(&mediaTypes, DIRECTORY);
-    printf("\n%d\n", ncols);
+	nnames = getFileNames(&mediaTypes, DIRECTORY);
+    ncols = nnames;
+
 	/* Make initial window to display current working directory */
     for(int i = 0; i < ncols; ++i)
         printf("%s\n", mediaTypes[i]);
@@ -59,7 +60,6 @@ int main(int argc, char * argv[] ){
 
     return endwin();
 	media = subwin(super, nlines-1,ncols/2,0,0);
-	
 	
 	/** Main loop where things will actually happen **/
 	for(int i = 0; 1; ++i){
@@ -76,10 +76,10 @@ int main(int argc, char * argv[] ){
 			printf("OK%d ERR%d\n", OK,ERR);
 			wrefresh(media);
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
 		}
 
 	}
 	
+    freeFileNames(&mediaTypes, nnames);
 	return endwin();
 }

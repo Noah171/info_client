@@ -16,30 +16,36 @@ int getFileNames(char *** names, const char * directory)
 	 */
 {
 	const int buffer = 100; // constant temporary buffer length
-	// temporary array of strings with buffer length
-	char temp[buffer][buffer] = {}; 
-	// this is effectively a temporary way to refer to the list of
-	// strings
-	char **tnames = *names;
-	// Will be number of files in argument "directory"
-	int fileCount = 0;
+	char temp[buffer][buffer] = {};// temporary array of strings with buffer length
+	char ** tnames = NULL;// atemporary way to refer to the list of strings char **tnames = *names;
+	int fileCount = 0;// Will be number of files in argument "directory"
+	struct dirent * dirInfo;// holds information about a file holds info about "directory"
+	DIR * dir = opendir(directory);
 
-	struct dirent * dirInfo;// holds information about a file
-	// Holds info about "directory"
-	DIR * dir = opendir(directory); 
 	// dir is NULL if opendir fails
 	if(dir == NULL){
-		// in which case return fileCount, which is 0
-		return fileCount;
+		printf("%s\n", directory);
+		if(mkdir(directory, S_IRWXU) == -1){
+			perror(strerror(errno));
+			return 0;
+		}
+
+		dir = opendir(directory);
+		if(dir ==NULL)
+			return 0;
 	}
+
 	// Fill the temporary buffer with the directory's contents
 	// and increment the fileCount
-	for(fileCount = 0;(fileInfo = readdir(dir)) != NULL; ++fileCount)
+	while((dirInfo=readdir(dir)) != NULL){
 		strcpy(temp[fileCount], dirInfo->d_name);
-	// if file count is still 0, then the directory is empty so return -1
-	if(fileCount == 0)
-		return -1;
+		++fileCount;
+	}
 
+	// if file count is still 2, then the directory is empty so return -1 (empty dirs have . and ..)
+	if(fileCount == EMPTY_DIR){
+		return -1;
+	}
 	// Start filling tnames from the temporary buffer of adequate
 	// malloced size
 	tnames = (char **) malloc(fileCount * sizeof(char*));
@@ -51,6 +57,18 @@ int getFileNames(char *** names, const char * directory)
 	//REASSIGN what names points to, otherwise *names is NULL
 	// and this works because ALL of tnames is malloced
 	*names = tnames;
-	
+
+	closedir(dir);
 	return fileCount;
 }
+
+short freeFileNames(char ***names, int nameCount){
+	if (*names == NULL)
+		return -1;
+
+	for(int i = 0; i < nameCount; ++i)
+		free((*names)[i]);
+	free(*names);
+	return 1;
+}
+
