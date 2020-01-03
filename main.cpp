@@ -51,20 +51,17 @@ int main(int argc, char * argv[] ){
 
 	// Get contents of media directory because that will decide the size of media window
 	nnames = getFileNames(&mediaTypes, DIRECTORY);
-    ncols = nnames;
-
+	ncols = nnames;
 	/* Make initial window to display current working directory */
-    for(int i = 0; i < ncols; ++i)
-        printf("%s\n", mediaTypes[i]);
-    std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-
-    return endwin();
-	media = subwin(super, nlines-1,ncols/2,0,0);
+	media = subwin(super, nlines-1,ncols+3,0,0);
 	
 	/** Main loop where things will actually happen **/
 	for(int i = 0; 1; ++i){
-		if( i  < 20){
-			waddstr(media, "GGGGGGGG");
+		/* update the windows so far just the media window */
+		// count down for print formatting purposes
+		for(int j = 0; j < ncols; j++){
+			waddstr(media,mediaTypes[j]);
+			waddstr(media,"\n");
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		if(is_term_resized(nlines, ncols)){
@@ -77,9 +74,10 @@ int main(int argc, char * argv[] ){
 			wrefresh(media);
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		}
-
+		wrefresh(media);
+		break;
 	}
-	
+	std::this_thread::sleep_for(std::chrono::milliseconds(50000));
     freeFileNames(&mediaTypes, nnames);
 	return endwin();
 }

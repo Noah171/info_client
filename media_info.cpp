@@ -11,8 +11,7 @@ int getFileNames(char *** names, const char * directory)
 	 *   strings to be altered. We need to alter the list's size.
 	 * - directory: directory where we will get the filen names from 
 	 *   to fill names
-	 * Returns: 0 upon failure, -1 if the directory is empty, 
-	 * otherwise the number of files in the directory
+	 * Returns: 0 upon failure, otherwise the number of files in the directory
 	 */
 {
 	const int buffer = 100; // constant temporary buffer length
@@ -31,7 +30,7 @@ int getFileNames(char *** names, const char * directory)
 		}
 
 		dir = opendir(directory);
-		if(dir ==NULL)
+		if(dir == NULL)
 			return 0;
 	}
 
@@ -42,10 +41,6 @@ int getFileNames(char *** names, const char * directory)
 		++fileCount;
 	}
 
-	// if file count is still 2, then the directory is empty so return -1 (empty dirs have . and ..)
-	if(fileCount == EMPTY_DIR){
-		return -1;
-	}
 	// Start filling tnames from the temporary buffer of adequate
 	// malloced size
 	tnames = (char **) malloc(fileCount * sizeof(char*));
