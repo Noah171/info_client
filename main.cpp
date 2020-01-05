@@ -1,3 +1,6 @@
+#include "mouse.hpp"
+#include "media_info.hpp"
+
 #include <curses.h> // general curses stuff
 #include <locale.h> // for setlocale() in main()
 
@@ -8,8 +11,6 @@
 #include <thread>
 #include <errno.h>
 
-#include "cursor.hpp"
-#include "media_info.hpp"
 
 /* TODO:
  * A) resize subwindows and contents
@@ -21,13 +22,13 @@
  * B) Note that the way refresh works is odd.
  *
  */
-#define printerr(err) fprintf(stderr, err);
 
 int main(int argc, char * argv[] ){
 	WINDOW * super = NULL;
 	WINDOW * media = NULL;
 	char ** mediaTypes = NULL;
 	int nlines = 0, ncols = 0, nnames = 0;
+	Mouse mouse;
 
 	/** Window initialization **/
 	// This ensures our prefered locale settings are used (like character sets)
