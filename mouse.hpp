@@ -5,11 +5,11 @@
 
 class Mouse{
 public:
-	Mouse();
+	Mouse(WINDOW *x, int y, WINDOW *startWin);
 	~Mouse();
 private:
-	int x;
 	int y;
-	WINDOW *curwin;
+	WINDOW *curwin; // basically the mouse's 'x' value in the cartesian plane
+	const WINDOW *start;
 };
 #endif

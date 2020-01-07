@@ -42,7 +42,7 @@ int getFileNames(char *** names, const char * directory)
 	}
 
 	// Start filling tnames from the temporary buffer of adequate
-	// malloced size
+	// malloced
 	tnames = (char **) malloc(fileCount * sizeof(char*));
 	for(int i = 0; i < fileCount; ++i){
 		tnames[i] = (char *)malloc(strlen(temp[i]+1));
@@ -57,7 +57,10 @@ int getFileNames(char *** names, const char * directory)
 	return fileCount;
 }
 
-short freeFileNames(char ***names, int nameCount){
+short freeFileNames(char ***names, int nameCount)
+	// Frees file names malloced in getFileNames
+{
+	
 	if (*names == NULL)
 		return -1;
 
@@ -66,4 +69,3 @@ short freeFileNames(char ***names, int nameCount){
 	free(*names);
 	return 1;
 }
-
