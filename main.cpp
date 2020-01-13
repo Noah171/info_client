@@ -1,4 +1,4 @@
-#include "mouse.hpp"
+#include "cursor.hpp"
 #include "media_info.hpp"
 
 #include <curses.h> // general curses stuff
@@ -30,7 +30,7 @@ int main(int argc, char * argv[] ){
 	WINDOW * media = NULL;
 	char ** mediaTypes = NULL;
 	int nlines = 0, ncols = 0, nnames = 0;
-	Mouse mouse(media,0,media);
+	Cursor cursor(media,0,media);
 
 	/** Window initialization **/
 	// This ensures our prefered locale settings are used (like character sets)
@@ -110,6 +110,7 @@ void prettyPrintColumn(WINDOW * window, char ** strings, int numstrs, int ncols)
 
 		for(int k = 0; k < whitespace; ++k)
 			waddstr(window, " ");
+		// Adding in the symbols, which is why the symbol space is 2
 		waddstr(window,"|\n");
 	}
 }
