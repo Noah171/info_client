@@ -4,14 +4,16 @@
 #include <ncurses.h>
 
 // Node in doubly linked list
-class WNODE {
+class WNode {
 public:
-	WNODE();
-	~WNODE();
+	WNode(WINDOW * win);
+	~WNode();
+	WINDOW *getWindow();
+	WNode *next;
+	WNode *prev;
 
+private:
 	WINDOW * window;
-	WNODE *next;
-	WNODE *prev;
 };
 
 #endif

@@ -14,7 +14,8 @@
 /* TODO:
  * A) resize subwindows and contents
  * B) Make windows into linked lists so that moving right with cursor is easier.
- * C) Bind keys properly so that hjkl do what they do in vim ie move left,up,down,right
+ * C) Bind keys properly so that hjkl do what they do in vim ie move left,up,down,righto
+ * D) Mke a "freeWindows" function which calls delwin() on each window in the linked list
 */
 
 /* NOTES:
@@ -77,6 +78,7 @@ int main(int argc, char * argv[] ){
 		break;
 	}
 	std::this_thread::sleep_for(std::chrono::milliseconds(50000));
+	
 	freeFileNames(&mediaTypes, nnames);
 	return endwin();
 }

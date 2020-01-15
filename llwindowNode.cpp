@@ -2,8 +2,9 @@
 /*
  * WNODE CODE
 */
-WNODE::WNODE(){
-
+WNode::WNode(WINDOW * win){
+	this->window = win;
 }
-WNODE::~WNODE(){
+WNode::~WNode(){
+	delwin(window);
 }

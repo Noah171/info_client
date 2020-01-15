@@ -1,13 +1,13 @@
 #include "llwindow.hpp"
 
-WHEAD::WHEAD(){
+WHead::WHead(){
 	this->first = NULL;
 	this->last = NULL;
 	this->size = 0;
 }
 
-void WHEAD::appendNode(WNODE *window){
-	WNODE *temp = this->last;
+void WHead::appendNode(WNode *window){
+	WNode *temp = this->last;
 	this->last = window;
 	this->last->prev = temp;
 	this->last->next = NULL;

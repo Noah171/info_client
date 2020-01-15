@@ -6,16 +6,16 @@
 
 
 // Linked list of WNODE's descriptor
-class WHEAD {
+class WHead {
 public:
 	// methods
-	WHEAD();
-	~WHEAD();
-	void appendNode(WNODE *window);
+	WHead();
+	~WHead();
+	void appendNode(WNode *window);
 
 	// attributes
-	WNODE *first;
-	WNODE *last;
+	WNode *first;
+	WNode *last;
 	int size;
 
 };

@@ -14,6 +14,6 @@ public:
 private:
 	int y;
 	WINDOW *curwin; // basically the cursor's 'x' value in the cartesian plane
-	const WINDOW *start;
+	const WHead linkedlist;
 };
 #endif
