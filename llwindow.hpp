@@ -2,22 +2,30 @@
 #define LLWINDOW
 
 #include <ncurses.h>
-#include "llwindowNode.hpp"
+#include <string.h>
 
+typedef struct node {
+	node *prev;
+	node *nxt;
+	WINDOW *curwin;
+} node;
+// Linked list of node's descriptor
 
-// Linked list of WNODE's descriptor
 class WHead {
 public:
 	// methods
 	WHead();
 	~WHead();
-	void appendNode(WNode *window);
+	void appendNode( WINDOW *window);
+	void delWindows();
 
+private:
 	// attributes
-	WNode *first;
-	WNode *last;
+	char *prettyFormatStrings(char ** strings, int numstrs, int ncols);
+	node *makeNode(WINDOW * window);
+	node *first;
+	node *last;
 	int size;
-
 };
 
 #endif

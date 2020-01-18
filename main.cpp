@@ -16,6 +16,8 @@
  * B) Make windows into linked lists so that moving right with cursor is easier.
  * C) Bind keys properly so that hjkl do what they do in vim ie move left,up,down,righto
  * D) Mke a "freeWindows" function which calls delwin() on each window in the linked list
+ * E) remake prettyformatstrings to be WINDOW independent and just put the strings in a 
+ * 		buffer string
 */
 
 /* NOTES:
@@ -23,8 +25,7 @@
  * B) Note that the way refresh works is odd.
  */
 
-int getLongestStr(char ** strs, int numStrs, int * len);
-void prettyPrintColumn(WINDOW * window, char ** strings, int numstrs, int ncols);
+int getLongestStr(char ** strs, int numStrsn);
 
 int main(int argc, char * argv[] ){
 	WINDOW * super = NULL;
@@ -54,13 +55,13 @@ int main(int argc, char * argv[] ){
 	// Gets the current terminal size and stores it in nlines and ncols, because it is a macro
 	// nlines and ncols can be changed directly without pointers.
 	getmaxyx(super, nlines,ncols);
-
 	// Get contents of media directory because that will decide the size of media window
 	nnames = getFileNames(&mediaTypes, DIRECTORY);
 	// Sets ncols to the longest string's length
-	getLongestStr(mediaTypes, nnames, &ncols);
+	int longestIndex = getLongestStr(mediaTypes, nnames);
+	
 	/* Make initial window to display current working directory */
-	ncols += ADDITIONAL_COL_SPACE;
+	ncols = strlen(longestIndex) + ADDITIONAL_COL_SPACE;
 	media = subwin(super, nlines-1,ncols,0,0);
 
 	/** Main loop where things will actually happen **/
@@ -83,36 +84,18 @@ int main(int argc, char * argv[] ){
 	return endwin();
 }
 
-int getLongestStr(char ** strings, int numStrs, int * len)
+int getLongestStr(char ** strings, int numStrs)
 // Gets the longest string in an array of strings
 {
-	*len = 0;
 	int index = 0;
+	int longest = 0;
 	for(int i = 0; i < numStrs; ++i){
 		int strl = strlen(strings[i]);
-		if(strl > *len){
+		if(strl > longest){
 			index = i;
-			*len = strl;
+			longest = strl;
 		}
 	}
 	return index;
 }
 
-void prettyPrintColumn(WINDOW * window, char ** strings, int numstrs, int ncols)
-/* Pretty prints the strings into window. */
-{
-	/* update the windows so far just the media window */
-	int curlen = 0;
-	int whitespace = 0;
-	const int symbolspace = 2; // Space for "|\n"
-	for(int j = numstrs-1; j >= 0; j--){
-		curlen = strlen(strings[j]);
-		whitespace = ncols - curlen - symbolspace;
-		waddstr(window,strings[j]);
-
-		for(int k = 0; k < whitespace; ++k)
-			waddstr(window, " ");
-		// Adding in the symbols, which is why the symbol space is 2
-		waddstr(window,"|\n");
-	}
-}
