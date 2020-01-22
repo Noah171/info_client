@@ -16,8 +16,8 @@
  * B) Make windows into linked lists so that moving right with cursor is easier.
  * C) Bind keys properly so that hjkl do what they do in vim ie move left,up,down,righto
  * D) Mke a "freeWindows" function which calls delwin() on each window in the linked list
- * E) remake prettyformatstrings to be WINDOW independent and just put the strings in a 
- * 		buffer string
+ * E) make a pretty print column function into the linked list window
+ * 	
 */
 
 /* NOTES:
@@ -61,12 +61,12 @@ int main(int argc, char * argv[] ){
 	int longestIndex = getLongestStr(mediaTypes, nnames);
 	
 	/* Make initial window to display current working directory */
-	ncols = strlen(longestIndex) + ADDITIONAL_COL_SPACE;
+	ncols = strlen(mediaTypes[longestIndex]) + ADDITIONAL_COL_SPACE;
 	media = subwin(super, nlines-1,ncols,0,0);
 
 	/** Main loop where things will actually happen **/
 	for(int i = 0; 1; ++i){
-		prettyPrintColumn(media, mediaTypes, nnames, ncols);
+		//prettyPrintColumn(media, mediaTypes, nnames, ncols);
 		if(is_term_resized(nlines, ncols)){
 			getmaxyx(super,nlines,ncols);
 			/* A) RESIZE SUBWINDOWS AND CONTENTS */

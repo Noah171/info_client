@@ -1,12 +1,15 @@
 #ifndef LLWINDOW
 #define LLWINDOW
 
+#define BUFFLEN 100
+
 #include <ncurses.h>
 #include <string.h>
+#include <cstdlib>
 
 typedef struct node {
 	node *prev;
-	node *nxt;
+	node *next;
 	WINDOW *curwin;
 } node;
 // Linked list of node's descriptor
@@ -16,8 +19,9 @@ public:
 	// methods
 	WHead();
 	~WHead();
-	void appendNode( WINDOW *window);
-	void delWindows();
+	void appendNode(node *window);
+	void deleteLList(int i);
+	void delnode(int i);
 
 private:
 	// attributes
