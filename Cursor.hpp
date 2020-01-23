@@ -1,5 +1,5 @@
 #ifndef CURSOR
-#define CURSOR
+#define CURSORStream Avatar
 
 #include <ncurses.h>
 #include "llwindow.hpp"
