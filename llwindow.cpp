@@ -27,6 +27,57 @@ void WHead::deleteLList(int i){
 	}
 }
 
+void WHead::delnode(int index){
+
+	node *nodeToDelete = NULL;
+	node *tprev = NULL;
+	node *tnxt = NULL;
+
+	if(index >= size || index < 0){
+		return;
+	}
+	// Assign nodeToDelete and ensure that the node exists
+	if((nodeToDelete = getNode(index)) == NULL)
+		return;
+	
+	// if the node to delete is the first one
+	if(index == 0){
+		this->first = nodeToDelete->next;
+		this->first->prev = NULL;
+		freeNode(nodeToDelete);
+	}
+	// If the node to be deleted is the last one
+	else if(index == size-1){
+		this->last = nodeToDelete->prev;
+		this->last->next = NULL;
+		freeNode(nodeToDelete);
+	}
+	// otherwise, the node is in the middle, delete appropriately
+	else {
+		tprev = nodeToDelete->prev;
+		tnxt = nodeToDelete->next;
+		tprev->next = tnxt;
+		tnxt->prev =tprev;
+		freeNode(nodeToDelete);
+	}
+}
+
+void WHead::freeNode(node * n){
+	delwin(n->curwin);
+	free(n);
+} // end freeNode
+
+node * WHead::getNode(int index){
+
+	if(index >= this->size || index < 0){
+		return NULL;
+	}
+	node *temp = this->first;
+	for(int i = 0; i < index; ++i)
+		temp = temp->next;
+	return temp;
+} // end getNode
+
 char *WHead::prettyFormatStrings( char ** strings, int numstrs, int ncols)
 /* Pretty prints the strings into window. */
 {

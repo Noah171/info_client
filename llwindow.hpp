@@ -22,6 +22,8 @@ public:
 	void appendNode(node *window);
 	void deleteLList(int i);
 	void delnode(int i);
+	node * getNode(int i );
+	void freeNode(node* n);
 
 private:
 	// attributes
