@@ -1,5 +1,5 @@
 #include "llwindow.hpp"
-
+	this->size = 0;
 WHead::WHead(){
 	this->first = NULL;
 	this->last = NULL;
