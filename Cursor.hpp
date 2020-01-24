@@ -2,7 +2,7 @@
 #define CURSORStream Avatar
 
 #include <ncurses.h>
-#include "llwindow.hpp"
+#include "LLHead.hpp"
 
 class Cursor{
 

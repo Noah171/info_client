@@ -52,7 +52,7 @@ int getFileNames(char *** names, const char * directory)
 	//REASSIGN what names points to, otherwise *names is NULL
 	// and this works because ALL of tnames is malloced
 	*names = tnames;
-
+	
 	closedir(dir);
 	return fileCount;
 }
@@ -60,9 +60,9 @@ int getFileNames(char *** names, const char * directory)
 short freeFileNames(char ***names, int nameCount)
 	// Frees file names malloced in getFileNames
 {
-	
-	if (*names == NULL)
+	if (*names == NULL){
 		return -1;
+	}
 
 	for(int i = 0; i < nameCount; ++i)
 		free((*names)[i]);

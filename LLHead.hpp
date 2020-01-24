@@ -3,35 +3,28 @@
 
 #define BUFFLEN 100
 
+#include "LLNode.hpp"
+
 #include <ncurses.h>
 #include <string.h>
 #include <cstdlib>
 
-typedef struct node {
-	node *prev;
-	node *next;
-	WINDOW *curwin;
-} node;
 // Linked list of node's descriptor
-
-class WHead {
+class LLHead {
 public:
 	// methods
-	WHead();
-	~WHead();
-	void appendNode(node *window);
-	void deleteLList(int i);
+	LLHead();
+	~LLHead();
+	void appendNode(WINDOW *super, const char *dirName);
+	void deleteLList();
 	void delnode(int i);
-	node * getNode(int i );
-	void freeNode(node* n);
+	LLNode getNode(int i);
 
 private:
 	// attributes
-	char *prettyFormatStrings(char ** strings, int numstrs, int ncols);
-	node *makeNode(WINDOW * window);
-	node *first;
-	node *last;
+
+	LLNode *first;
+	LLNode *last;
 	int size;
 };
-
 #endif

@@ -1,5 +1,6 @@
-#include "cursor.hpp"
+#include "Cursor.hpp"
 #include "media_info.hpp"
+#include "LLHead.hpp"
 
 #include <curses.h> // general curses stuff
 #include <locale.h> // for setlocale() in main()
@@ -9,15 +10,14 @@
 #include <thread>
 #include <errno.h>
 
-#define ADDITIONAL_COL_SPACE 4
-
 /* TODO:
  * A) resize subwindows and contents
  * B) Make windows into linked lists so that moving right with cursor is easier.
  * C) Bind keys properly so that hjkl do what they do in vim ie move left,up,down,righto
  * D) Mke a "freeWindows" function which calls delwin() on each window in the linked list
  * E) make a pretty print column function into the linked list window
- * 	
+ * F) in void updateNodeContents in llnode adjust the size of the column accordingly
+ *
 */
 
 /* NOTES:
@@ -30,9 +30,9 @@ int getLongestStr(char ** strs, int numStrsn);
 int main(int argc, char * argv[] ){
 	WINDOW * super = NULL;
 	WINDOW * media = NULL;
-	char ** mediaTypes = NULL;
 	int nlines = 0, ncols = 0, nnames = 0;
 	Cursor cursor(media,0,media);
+	LLHead windowll;
 
 	/** Window initialization **/
 	// This ensures our prefered locale settings are used (like character sets)
@@ -48,25 +48,25 @@ int main(int argc, char * argv[] ){
 
 	/** Setting Hotkeys **/
 
-	
-
 	/** END Setting Hotkeys **/
 
 	// Gets the current terminal size and stores it in nlines and ncols, because it is a macro
 	// nlines and ncols can be changed directly without pointers.
 	getmaxyx(super, nlines,ncols);
-	// Get contents of media directory because that will decide the size of media window
-	nnames = getFileNames(&mediaTypes, DIRECTORY);
-	// Sets ncols to the longest string's length
-	int longestIndex = getLongestStr(mediaTypes, nnames);
-	
-	/* Make initial window to display current working directory */
-	ncols = strlen(mediaTypes[longestIndex]) + ADDITIONAL_COL_SPACE;
-	media = subwin(super, nlines-1,ncols,0,0);
 
+	//
+	//
+	// START FIXING PROGRAM FROM HERE
+	//
+	//
+	//
+	
+	LLNode * firstWindow = new LLNode(super, DIRECTORY);
+	windowll.appendNode(firstWindow);
+	// Get contents of media directory because that will decide the size of media window
 	/** Main loop where things will actually happen **/
 	for(int i = 0; 1; ++i){
-		//prettyPrintColumn(media, mediaTypes, nnames, ncols);
+		windowll->printCols(
 		if(is_term_resized(nlines, ncols)){
 			getmaxyx(super,nlines,ncols);
 			/* A) RESIZE SUBWINDOWS AND CONTENTS */
@@ -78,11 +78,13 @@ int main(int argc, char * argv[] ){
 		wrefresh(media);
 		break;
 	}
-	std::this_thread::sleep_for(std::chrono::milliseconds(50000));
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	
 	freeFileNames(&mediaTypes, nnames);
+
+	delete(windowll);
 	return endwin();
-}
+} // end main
 
 int getLongestStr(char ** strings, int numStrs)
 // Gets the longest string in an array of strings

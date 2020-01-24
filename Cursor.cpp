@@ -1,4 +1,4 @@
-#include "cursor.hpp"
+#include "Cursor.hpp"
 
 Cursor::Cursor(WINDOW * x, int y, WINDOW * startWin){
 	this->curwin = x;
