@@ -26,9 +26,9 @@ void LLHead::deleteLList(){
 }// end deleteLList
 
 void LLHead::delnode(int index){
-	LLNode nodeToDelete = NULL;
-	LLNode tprev = NULL;
-	LLNode tnxt = NULL;
+	LLNode *nodeToDelete = NULL;
+	LLNode *tprev = NULL;
+	LLNode *tnxt = NULL;
 
 	if(index >= size || index < 0){
 		return;
@@ -57,7 +57,7 @@ void LLHead::delnode(int index){
 		tnxt->prev =tprev;
 		delete(nodeToDelete);
 	}
-}
+} // end delnode
 
 LLNode *LLHead::getNode(int index){
 
@@ -69,11 +69,4 @@ LLNode *LLHead::getNode(int index){
 		temp = temp->next;
 	return temp;
 } // end getNode
-
-void LLHead::prettyPrintColumn(){
-	// Write this
-	for(int i = 0; i < size; ++i){
-		char * strings;
-	}
-}// endprettyPrintColumns
 

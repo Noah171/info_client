@@ -15,10 +15,10 @@ public:
 	// methods
 	LLHead();
 	~LLHead();
-	void appendNode(WINDOW *super, const char *dirName);
+	void appendNode(LLNode * node);
 	void deleteLList();
 	void delnode(int i);
-	LLNode getNode(int i);
+	LLNode *getNode(int i);
 
 private:
 	// attributes

@@ -18,7 +18,7 @@ void LLNode::updateNodeContents(){
 	int longestIndex = 0;
 
 	// Get contents of media directory because that will decide the size of media window
-	contentCount = getFileNames(&contents, DIRECTORY);
+	contentCount = getFileContent(&contents, this->cwd);
 	longestIndex = getLongestStr(contents, contentCount);
 
 	/* Make initial window to display current working directory */
@@ -66,3 +66,75 @@ char * LLNode::prettyFormatStrings( char ** strings, int numstrs, int ncols)
 
 	return pretty_string;
 } // end prettyFormatString
+
+
+int LLNode::getFileContent(char *** content, const char * directory)
+	/*
+	 * Args:
+	 * - content: empty memory, will be malloced and must be freed. 
+	 *   Will be the address of a "char **"
+	 *   Will be filled with file content from directory. notice
+	 *   it is a triple pointer, because what is altered is a list
+	 *   of strings, just sending a double pointer only allows the
+	 *   strings to be altered. We need to alter the list's size.
+	 * - directory: directory where we will get the filen content from 
+	 *   to fill content
+	 * Returns: 0 upon failure, otherwise the number of files in the directory
+	 */
+{
+	const int buffer = 100; // constant temporary buffer length
+	char temp[buffer][buffer] = {};// temporary array of strings with buffer length
+	char ** tcontent = NULL;// atemporary way to refer to the list of strings char **tcontent = *content;
+	int fileCount = 0;// Will be number of files in argument "directory"
+	struct dirent * dirInfo;// holds information about a file holds info about "directory"
+	DIR * dir = opendir(directory);
+
+	// dir is NULL if opendir fails
+	if(dir == NULL){
+		printf("%s\n", directory);
+		if(mkdir(directory, S_IRWXU) == -1){
+			perror(strerror(errno));
+			return 0;
+		}
+
+		dir = opendir(directory);
+		if(dir == NULL)
+			return 0;
+	}
+
+	// Fill the temporary buffer with the directory's contents
+	// and increment the fileCount
+	while((dirInfo=readdir(dir)) != NULL){
+		strcpy(temp[fileCount], dirInfo->d_name);
+		++fileCount;
+	}
+
+	// Start filling tcontent from the temporary buffer of adequate
+	// malloced
+	tcontent = (char **) malloc(fileCount * sizeof(char*));
+	for(int i = 0; i < fileCount; ++i){
+		tcontent[i] = (char *)malloc(strlen(temp[i]+1));
+		strcpy(tcontent[i], temp[i]); 
+	}
+
+	//REASSIGN what content points to, otherwise *content is NULL
+	// and this works because ALL of tcontent is malloced
+	*content = tcontent;
+	
+	closedir(dir);
+	return fileCount;
+}
+
+short LLNode::freeContent(char ***content, int contentCount)
+	// Frees file content malloced in getFileContent
+{
+	if (*content == NULL){
+		return -1;
+	}
+
+	for(int i = 0; i < contentCount ; ++i)
+		free((*content)[i]);
+
+	free(*content);
+	return 1;
+}
