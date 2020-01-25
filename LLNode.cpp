@@ -16,7 +16,7 @@ void LLNode::updateNodeContents(){
 	int contentCount = 0;
 	int nlines = 0;
 	int longestIndex = 0;
-
+	/// CURRENTLY WORKING HEREREREREREREREE
 	// Get contents of media directory because that will decide the size of media window
 	contentCount = getFileContent(&contents, this->cwd);
 	longestIndex = getLongestStr(contents, contentCount);
