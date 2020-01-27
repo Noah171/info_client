@@ -30,7 +30,8 @@ int getLongestStr(char ** strs, int numStrsn);
 int main(int argc, char * argv[] ){
 	WINDOW * super = NULL;
 	WINDOW * media = NULL;
-	int nlines = 0, ncols = 0, nnames = 0;
+	int nlines = 0;
+	int ncols = 0;
 	Cursor cursor(media,0,media);
 	LLHead windowll;
 
@@ -55,22 +56,20 @@ int main(int argc, char * argv[] ){
 	getmaxyx(super, nlines,ncols);
 
 	//
-	//
 	// START FIXING PROGRAM FROM HERE
-	//
-	//
-	//
 	
 	LLNode * firstWindow = new LLNode(super, DIRECTORY);
 	windowll.appendNode(firstWindow);
+
 	// Get contents of media directory because that will decide the size of media window
 	/** Main loop where things will actually happen **/
 	for(int i = 0; 1; ++i){
-		windowll->printCols(
+		windowll.print();
 		if(is_term_resized(nlines, ncols)){
 			getmaxyx(super,nlines,ncols);
 			/* A) RESIZE SUBWINDOWS AND CONTENTS */
 		}
+
 		printf("%d\n", wmove(media, 0,0));
 		printf("OK%d ERR%d\n", OK,ERR);
 		wrefresh(media);
@@ -79,25 +78,6 @@ int main(int argc, char * argv[] ){
 		break;
 	}
 	std::this_thread::sleep_for(std::chrono::milliseconds(500));
-	
-	freeFileNames(&mediaTypes, nnames);
 
-	delete(windowll);
 	return endwin();
 } // end main
-
-int getLongestStr(char ** strings, int numStrs)
-// Gets the longest string in an array of strings
-{
-	int index = 0;
-	int longest = 0;
-	for(int i = 0; i < numStrs; ++i){
-		int strl = strlen(strings[i]);
-		if(strl > longest){
-			index = i;
-			longest = strl;
-		}
-	}
-	return index;
-}
-

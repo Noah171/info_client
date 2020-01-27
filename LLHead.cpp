@@ -11,15 +11,25 @@ LLHead::~LLHead(){
 }
 
 void LLHead::appendNode(LLNode * newNode){
-	LLNode *temp = this->last;
-	this->last = newNode;
-	this->last->prev = temp;
-	this->last->next = NULL;
-	temp->next = this->last;
-}// end appendNode 
+	if(size == 0){
+		this->first = newNode;
+		this->last = newNode;
+		newNode->next = NULL;
+		newNode->prev = NULL;
+	}
+	else{
+		LLNode *temp = this->last;
+		this->last = newNode;
+		this->last->prev = temp;
+		this->last->next = NULL;
+		temp->next = this->last;
+	}
+	size++;
+}// end appendNode
 
 void LLHead::deleteLList(){
-	for(int i = 0; i < this->size; ++i){
+	int llsize = this->size;
+	for(int i = 0; i < llsize; ++i){
 		// write getnode btw
 		delnode(i);
 	}
@@ -34,14 +44,22 @@ void LLHead::delnode(int index){
 		return;
 	}
 	// Assign nodeToDelete and ensure that the node exists
-	if((nodeToDelete = getNode(index)) == NULL)
+	if((nodeToDelete = getNode(index)) == NULL){
 		return;
+	}
 	
 	// if the node to delete is the first one
 	if(index == 0){
-		this->first = nodeToDelete->next;
-		this->first->prev = NULL;
-		delete(nodeToDelete);
+		if(this->first->next != NULL){
+			this->first = nodeToDelete->next;
+			this->first->prev = NULL;
+			delete(nodeToDelete);
+		}
+		else{
+			this->first = NULL;
+			this->last = NULL;
+			delete(nodeToDelete);
+		}
 	}
 	// If the node to be deleted is the last one
 	else if(index == size-1){
@@ -57,6 +75,9 @@ void LLHead::delnode(int index){
 		tnxt->prev =tprev;
 		delete(nodeToDelete);
 	}
+
+	size --;
+
 } // end delnode
 
 LLNode *LLHead::getNode(int index){
@@ -70,3 +91,9 @@ LLNode *LLHead::getNode(int index){
 	return temp;
 } // end getNode
 
+void LLHead::print(){
+	for(int i = 0; i < size; ++i ){
+		this->getNode(i)->printColumn();
+		printf("%s\n", this->getNode(i)->getCwd());
+	}
+} // end print

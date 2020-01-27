@@ -14,22 +14,31 @@ LLNode::~LLNode(){
 void LLNode::updateNodeContents(){
 	char ** contents = NULL;
 	int contentCount = 0;
-	int nlines = 0;
 	int longestIndex = 0;
-	/// CURRENTLY WORKING HEREREREREREREREE
+
+	/// CURRENTLY WORKING HERE
 	// Get contents of media directory because that will decide the size of media window
-	contentCount = getFileContent(&contents, this->cwd);
-	longestIndex = getLongestStr(contents, contentCount);
+	contentCount = this->getContent(&contents, this->cwd);
+	longestIndex = this->getLongestStr(contents, contentCount);
 
 	/* Make initial window to display current working directory */
-	this->ncols = strlen(mediaTypes[longestIndex]) + ADDITIONAL_COL_SPACE;
-
+	this->ncols = strlen(contents[longestIndex]) + ADDITIONAL_COL_SPACE;
+	
+	this->freeContent(&contents, contentCount);
 } // end updateNodeContents
 
-void LLNode::prettyPrintColumn(char ** contents,int len, int ncols){
-//	char * str = prettyFormatStrings(contents, , );
-	addnstr(, len);
+void LLNode::printColumn(){
+
+	int nlines = 0;
+	int ncols = 0;
+	char ** contents = NULL;
+	nlines = getContent(&contents, cwd);
+	ncols = getLongestStr();
+	char * str = prettyFormatStrings(contents, nlines, );
+
+	//addnstr(, len);
 	
+	//free(str);
 } // end prettyPrintColumn
 
 char * LLNode::prettyFormatStrings( char ** strings, int numstrs, int ncols)
@@ -68,7 +77,7 @@ char * LLNode::prettyFormatStrings( char ** strings, int numstrs, int ncols)
 } // end prettyFormatString
 
 
-int LLNode::getFileContent(char *** content, const char * directory)
+int LLNode::getContent(char *** content, const char * directory)
 	/*
 	 * Args:
 	 * - content: empty memory, will be malloced and must be freed. 
@@ -85,7 +94,7 @@ int LLNode::getFileContent(char *** content, const char * directory)
 	const int buffer = 100; // constant temporary buffer length
 	char temp[buffer][buffer] = {};// temporary array of strings with buffer length
 	char ** tcontent = NULL;// atemporary way to refer to the list of strings char **tcontent = *content;
-	int fileCount = 0;// Will be number of files in argument "directory"
+	int objCount= 0;// Will be number of files in argument "directory"
 	struct dirent * dirInfo;// holds information about a file holds info about "directory"
 	DIR * dir = opendir(directory);
 
@@ -105,14 +114,14 @@ int LLNode::getFileContent(char *** content, const char * directory)
 	// Fill the temporary buffer with the directory's contents
 	// and increment the fileCount
 	while((dirInfo=readdir(dir)) != NULL){
-		strcpy(temp[fileCount], dirInfo->d_name);
-		++fileCount;
+		strcpy(temp[objCount], dirInfo->d_name);
+		++objCount;
 	}
 
 	// Start filling tcontent from the temporary buffer of adequate
 	// malloced
-	tcontent = (char **) malloc(fileCount * sizeof(char*));
-	for(int i = 0; i < fileCount; ++i){
+	tcontent = (char **) malloc(objCount * sizeof(char*));
+	for(int i = 0; i < objCount; ++i){
 		tcontent[i] = (char *)malloc(strlen(temp[i]+1));
 		strcpy(tcontent[i], temp[i]); 
 	}
@@ -122,8 +131,8 @@ int LLNode::getFileContent(char *** content, const char * directory)
 	*content = tcontent;
 	
 	closedir(dir);
-	return fileCount;
-}
+	return objCount;
+} // end getContent
 
 short LLNode::freeContent(char ***content, int contentCount)
 	// Frees file content malloced in getFileContent
@@ -137,4 +146,21 @@ short LLNode::freeContent(char ***content, int contentCount)
 
 	free(*content);
 	return 1;
-}
+} // end freeContent
+
+int LLNode::getLongestStr(char ** strings, int numStrs)
+// Gets the longest string in an array of strings
+{
+	int index = 0;
+	int longest = 0;
+	for(int i = 0; i < numStrs; ++i){
+		int strl = strlen(strings[i]);
+		if(strl > longest){
+			index = i;
+		longest = strl;
+		}
+	}
+	return index;
+} // end getLongestStr
+
+const char * LLNode::getCwd() { return this->cwd;}
