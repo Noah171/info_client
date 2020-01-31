@@ -18,6 +18,7 @@ public:
 	void appendNode(LLNode * node);
 	void deleteLList();
 	void delnode(int i);
+	void print(); // skeleton
 	LLNode *getNode(int i);
 
 private:

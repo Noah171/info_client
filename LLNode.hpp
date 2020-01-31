@@ -3,6 +3,7 @@
 
 #define ADDITIONAL_COL_SPACE 4
 #define EMPTY_DIR 2 // The number of files in the directory if it is empty (. and .. are there    )
+#define BUFFLEN 100
 
 #include <ncurses.h>
 #include <sys/stat.h> // For mkdir in getFileNames
@@ -17,15 +18,17 @@ class LLNode{
 		LLNode(WINDOW * super, const char * dir);
 		~LLNode();
 		void updateNodeContents();
-		void prettyPrintColumn(char * contents);
-		char *prettyFormatStrings(char ** strings, int numstrs, int ncols);	
+		void printColumn();
+
+		const char *getCwd();
 		LLNode * prev;
 		LLNode * next;
 
 	private:
-		int getFileContent(char *** content, const char * directory);
-		short freeFileContent(char *** content, int contentCount);
-		int getLongestStr(char ** string, int numStrs);
+		int getContent(char *** content, const char * directory);
+		short freeContent(char *** content, int contentCount);
+		int getLongestStr(char ** strs, int numStrs);
+		char *prettyFormatStrings(char ** strings, int numstrs, int ncols);
 
 		WINDOW * curwin;
 		const char * cwd;
