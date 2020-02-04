@@ -55,26 +55,19 @@ int main(int argc, char * argv[] ){
 	// nlines and ncols can be changed directly without pointers.
 	getmaxyx(super, nlines,ncols);
 
-	//
-	// START FIXING PROGRAM FROM HERE
-	
-	LLNode * firstWindow = new LLNode(super, DIRECTORY);
+	LLNode * firstWindow = new LLNode(super, DIRECTORY, 0,0);
 	windowll.appendNode(firstWindow);
 
 	// Get contents of media directory because that will decide the size of media window
 	/** Main loop where things will actually happen **/
 	for(int i = 0; 1; ++i){
-		windowll.print();
+
 		if(is_term_resized(nlines, ncols)){
 			getmaxyx(super,nlines,ncols);
 			/* A) RESIZE SUBWINDOWS AND CONTENTS */
 		}
-
-		printf("%d\n", wmove(media, 0,0));
-		printf("OK%d ERR%d\n", OK,ERR);
-		wrefresh(media);
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		wrefresh(media);
+		windowll.print();
+		std::this_thread::sleep_for(std::chrono::milliseconds(500000));
 		break;
 	}
 	std::this_thread::sleep_for(std::chrono::milliseconds(500));

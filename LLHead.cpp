@@ -93,7 +93,8 @@ LLNode *LLHead::getNode(int index){
 
 void LLHead::print(){
 	for(int i = 0; i < size; ++i ){
-		this->getNode(i)->printColumn();
-		printf("%s\n", this->getNode(i)->getCwd());
+		LLNode *curNode = this->getNode(i);
+		curNode->updateNodeContents();
+		curNode->printColumnToWindow();
 	}
 } // end print

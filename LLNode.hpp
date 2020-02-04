@@ -15,24 +15,30 @@
 
 class LLNode{
 	public:
-		LLNode(WINDOW * super, const char * dir);
+		LLNode(WINDOW * super, const char * dir, int xpos, int ypos);
 		~LLNode();
 		void updateNodeContents();
-		void printColumn();
+		void printColumnToWindow();
 
 		const char *getCwd();
 		LLNode * prev;
 		LLNode * next;
 
 	private:
-		int getContent(char *** content, const char * directory);
-		short freeContent(char *** content, int contentCount);
-		int getLongestStr(char ** strs, int numStrs);
-		char *prettyFormatStrings(char ** strings, int numstrs, int ncols);
+		static int getContent(char *** content, const char * directory);
+		static short freeContent(char *** content, int contentCount);
+		static int getLongestStr(char ** strs, int numStrs);
+		const int symbolLen = 3; // symbol space for "|\n\r"
+		const char * symbol = "|\n\r"; // What will be printed at the end of each line
+		char *prettyFormatStrings(char ** strings, int numstrs);
 
 		WINDOW * curwin;
 		const char * cwd;
-		int nlines;
+		char ** contents; // Array of strings which the column will contain
+		// coordinates in the terminal window
+		int x;
+		int y;
+		int nlines; // Describes the length of contents first dimension (number of lines)
 		int ncols;
 };
 

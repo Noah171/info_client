@@ -1,63 +1,69 @@
 #include "LLNode.hpp"
 
-LLNode::LLNode(WINDOW *super, const char* DIRNAME){
+// Default node size is zero (nlines and ncols)
+LLNode::LLNode(WINDOW *super, const char* DIRNAME, int xpos, int ypos){
 	this->nlines = 0;
 	this->ncols = 0;
+	this->x = xpos;
+	this->y = ypos;
 	this->cwd = DIRNAME;
-	this->curwin = subwin(super, nlines-1, ncols,0,0);
+	this->curwin = subwin(super, nlines, ncols,x,y);
 } // end LLNode
 
 LLNode::~LLNode(){
 	delwin(this->curwin);
+	freeContent(&this->contents, nlines);
 } // end ~LLNode
 
+// Updates the node contents by going to its associated content source (files in a directory
+// or a file's content)
 void LLNode::updateNodeContents(){
-	char ** contents = NULL;
-	int contentCount = 0;
-	int longestIndex = 0;
-
-	/// CURRENTLY WORKING HERE
-	// Get contents of media directory because that will decide the size of media window
-	contentCount = this->getContent(&contents, this->cwd);
-	longestIndex = this->getLongestStr(contents, contentCount);
-
-	/* Make initial window to display current working directory */
-	this->ncols = strlen(contents[longestIndex]) + ADDITIONAL_COL_SPACE;
-	
-	this->freeContent(&contents, contentCount);
+	int successp = OK;
+	// reset the current content's memory to ensure that no sizing issues occur
+	if(this->contents != NULL){
+		LLNode::freeContent(&this->contents, this->nlines);
+	}
+	this->nlines = LLNode::getContent(&this->contents, cwd);
+	this->ncols = LLNode::getLongestStr(contents,nlines);
+	successp = wresize(this->curwin, this->nlines, this->ncols + LLNode::symbolLen);
+	if(successp != OK){
+		printf("Coudn't resize!\n");
+	}
 } // end updateNodeContents
 
-void LLNode::printColumn(){
+// Prints column to this nodes curwin
+void LLNode::printColumnToWindow(){
 
-	int nlines = 0;
-	int ncols = 0;
-	char ** contents = NULL;
-	nlines = getContent(&contents, cwd);
-	ncols = getLongestStr();
-	char * str = prettyFormatStrings(contents, nlines, );
+	char * str = prettyFormatStrings(this->contents, this->nlines);
+	int successp = OK;
 
-	//addnstr(, len);
-	
-	//free(str);
+	successp = waddnstr(this->curwin, str, strlen(str));
+	if (success != OK){
+		printf("Something's wrong in printColumnToWindow with waddnstr!\n\r");
+		printf("curwin %p str %p errno %d\n", this->curwin, str, success);
+	}
+	wrefresh(this->curwin);
+	free(str);
 } // end prettyPrintColumn
 
-char * LLNode::prettyFormatStrings( char ** strings, int numstrs, int ncols)
+// Pretty format's a list of strings to be printed out, likely to the curwin
+char * LLNode::prettyFormatStrings( char ** strings, int numStrs)
 /* Pretty prints the strings into window. */
 {
 	/* update the windows so far just the media window */
-	int curlen = 0;
-	int whitespace = 0;
 	int total_len = 0; //buffer's current length
 	char buffer[BUFFLEN] = {};
 	char * pretty_string = NULL;
-	const int symbol_space = 2; // Space for "|\n"
 
 	// Adding the strings to buffer in a "pretty" way. numstrs j is decremented for formatting reasons (order of file names looks better this way)
-	for(int j = numstrs-1; j >= 0; j--){
-		curlen = strnlen(strings[j], BUFFLEN);
-		total_len += curlen;
-		whitespace = ncols - curlen - symbol_space;
+	for(int j = numStrs-1; j >= 0; j--){
+		int whitespace = 0;
+		int curlen = strnlen(strings[j], BUFFLEN);
+		int longestIndex = LLNode::getLongestStr(strings, numStrs);
+		int longestLen = strlen(strings[ longestIndex]);
 
+		total_len += curlen;
+		whitespace = longestLen - curlen;
 		strncat(buffer ,strings[j], BUFFLEN);
 
 		for(int k = 0; k < whitespace; ++k){
@@ -65,17 +71,18 @@ char * LLNode::prettyFormatStrings( char ** strings, int numstrs, int ncols)
 			total_len++;
 		}
 		// Adding in the symbols. notice the symbol, "|\n" is of length 2
-		strncat(buffer ,"|\n", BUFFLEN-1);
-		total_len += symbol_space;
+		strncat(buffer , LLNode::symbol, BUFFLEN-1);
+		total_len += LLNode::symbolLen;
 	}
 	// Add one to amount to be malloced to account for NULL byte
 	pretty_string = (char *) malloc(total_len + 1);
+
 	bzero(pretty_string, total_len+1);
 	strncpy(pretty_string,buffer,total_len+1);
+	pretty_string[total_len] = '\0';
 
 	return pretty_string;
 } // end prettyFormatString
-
 
 int LLNode::getContent(char *** content, const char * directory)
 	/*
@@ -134,6 +141,7 @@ int LLNode::getContent(char *** content, const char * directory)
 	return objCount;
 } // end getContent
 
+// Frees content acquired from getContent
 short LLNode::freeContent(char ***content, int contentCount)
 	// Frees file content malloced in getFileContent
 {
@@ -148,6 +156,7 @@ short LLNode::freeContent(char ***content, int contentCount)
 	return 1;
 } // end freeContent
 
+// Simply finds the longest string in a list (the list is unordered so linear search it)
 int LLNode::getLongestStr(char ** strings, int numStrs)
 // Gets the longest string in an array of strings
 {
@@ -163,4 +172,7 @@ int LLNode::getLongestStr(char ** strings, int numStrs)
 	return index;
 } // end getLongestStr
 
-const char * LLNode::getCwd() { return this->cwd;}
+// Getter for cwd
+const char * LLNode::getCwd() {
+	return this->cwd;
+}
