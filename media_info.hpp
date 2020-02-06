@@ -12,7 +12,7 @@
 #define DIRECTORY "/home/ncs/.local/media_list/"
 #define EMPTY_DIR 2 // The number of files in the directory if it is empty (. and .. are there)
 
-extern int errno; // is errno, font is black thogh :C
+extern int errno; 
 
 int getFileNames(char *** names, const char * directory);
 short freeFileNames(char *** names, int nameCount);

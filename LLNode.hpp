@@ -27,7 +27,7 @@ class LLNode{
 	private:
 		static int getContent(char *** content, const char * directory);
 		static short freeContent(char *** content, int contentCount);
-		static int getLongestStr(char ** strs, int numStrs);
+		static int getLongestStrIndex(char ** strs, int numStrs);
 		const int symbolLen = 3; // symbol space for "|\n\r"
 		const char * symbol = "|\n\r"; // What will be printed at the end of each line
 		char *prettyFormatStrings(char ** strings, int numstrs);

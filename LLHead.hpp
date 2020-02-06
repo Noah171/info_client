@@ -18,12 +18,11 @@ public:
 	void appendNode(LLNode * node);
 	void deleteLList();
 	void delnode(int i);
-	void print(); // skeleton
+	void print(); 
 	LLNode *getNode(int i);
 
 private:
 	// attributes
-
 	LLNode *first;
 	LLNode *last;
 	int size;

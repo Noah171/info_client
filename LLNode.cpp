@@ -19,12 +19,14 @@ LLNode::~LLNode(){
 // or a file's content)
 void LLNode::updateNodeContents(){
 	int successp = OK;
+	int longestIndex = 0;
 	// reset the current content's memory to ensure that no sizing issues occur
 	if(this->contents != NULL){
 		LLNode::freeContent(&this->contents, this->nlines);
 	}
 	this->nlines = LLNode::getContent(&this->contents, cwd);
-	this->ncols = LLNode::getLongestStr(contents,nlines);
+	longestIndex = LLNode::getLongestStrIndex(contents,nlines);
+	this->ncols = strlen(this->contents[longestIndex]);
 	successp = wresize(this->curwin, this->nlines, this->ncols + LLNode::symbolLen);
 	if(successp != OK){
 		printf("Coudn't resize!\n");
@@ -38,9 +40,9 @@ void LLNode::printColumnToWindow(){
 	int successp = OK;
 
 	successp = waddnstr(this->curwin, str, strlen(str));
-	if (success != OK){
+	if (successp != OK){
 		printf("Something's wrong in printColumnToWindow with waddnstr!\n\r");
-		printf("curwin %p str %p errno %d\n", this->curwin, str, success);
+		printf("curwin %p str %p errno %d\n", this->curwin, str, successp);
 	}
 	wrefresh(this->curwin);
 	free(str);
@@ -59,7 +61,7 @@ char * LLNode::prettyFormatStrings( char ** strings, int numStrs)
 	for(int j = numStrs-1; j >= 0; j--){
 		int whitespace = 0;
 		int curlen = strnlen(strings[j], BUFFLEN);
-		int longestIndex = LLNode::getLongestStr(strings, numStrs);
+		int longestIndex = LLNode::getLongestStrIndex(strings, numStrs);
 		int longestLen = strlen(strings[ longestIndex]);
 
 		total_len += curlen;
@@ -100,11 +102,10 @@ int LLNode::getContent(char *** content, const char * directory)
 {
 	const int buffer = 100; // constant temporary buffer length
 	char temp[buffer][buffer] = {};// temporary array of strings with buffer length
-	char ** tcontent = NULL;// atemporary way to refer to the list of strings char **tcontent = *content;
+	char ** tcontent = NULL;// atemporary way to refer to the list of strings char **tcontent = *content;p
 	int objCount= 0;// Will be number of files in argument "directory"
 	struct dirent * dirInfo;// holds information about a file holds info about "directory"
 	DIR * dir = opendir(directory);
-
 	// dir is NULL if opendir fails
 	if(dir == NULL){
 		printf("%s\n", directory);
@@ -112,19 +113,16 @@ int LLNode::getContent(char *** content, const char * directory)
 			perror(strerror(errno));
 			return 0;
 		}
-
 		dir = opendir(directory);
 		if(dir == NULL)
 			return 0;
 	}
-
 	// Fill the temporary buffer with the directory's contents
 	// and increment the fileCount
 	while((dirInfo=readdir(dir)) != NULL){
 		strcpy(temp[objCount], dirInfo->d_name);
 		++objCount;
 	}
-
 	// Start filling tcontent from the temporary buffer of adequate
 	// malloced
 	tcontent = (char **) malloc(objCount * sizeof(char*));
@@ -132,11 +130,9 @@ int LLNode::getContent(char *** content, const char * directory)
 		tcontent[i] = (char *)malloc(strlen(temp[i]+1));
 		strcpy(tcontent[i], temp[i]); 
 	}
-
 	//REASSIGN what content points to, otherwise *content is NULL
 	// and this works because ALL of tcontent is malloced
 	*content = tcontent;
-	
 	closedir(dir);
 	return objCount;
 } // end getContent
@@ -157,7 +153,7 @@ short LLNode::freeContent(char ***content, int contentCount)
 } // end freeContent
 
 // Simply finds the longest string in a list (the list is unordered so linear search it)
-int LLNode::getLongestStr(char ** strings, int numStrs)
+int LLNode::getLongestStrIndex(char ** strings, int numStrs)
 // Gets the longest string in an array of strings
 {
 	int index = 0;
@@ -166,7 +162,7 @@ int LLNode::getLongestStr(char ** strings, int numStrs)
 		int strl = strlen(strings[i]);
 		if(strl > longest){
 			index = i;
-		longest = strl;
+			longest = strl;
 		}
 	}
 	return index;

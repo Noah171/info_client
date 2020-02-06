@@ -54,7 +54,7 @@ int main(int argc, char * argv[] ){
 	// Gets the current terminal size and stores it in nlines and ncols, because it is a macro
 	// nlines and ncols can be changed directly without pointers.
 	getmaxyx(super, nlines,ncols);
-
+ 
 	LLNode * firstWindow = new LLNode(super, DIRECTORY, 0,0);
 	windowll.appendNode(firstWindow);
 
