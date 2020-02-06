@@ -1,9 +1,9 @@
-#ifndef LLNODE
-#define LLNODE
+#ifndef LLNODE_H
+#define LLNODE_H
 
 #define ADDITIONAL_COL_SPACE 4
 #define EMPTY_DIR 2 // The number of files in the directory if it is empty (. and .. are there    )
-#define BUFFLEN 100
+#define LLNODE_BUFFLEN 128
 
 #include <ncurses.h>
 #include <sys/stat.h> // For mkdir in getFileNames
@@ -14,32 +14,32 @@
 #include <errno.h>
 
 class LLNode{
-	public:
-		LLNode(WINDOW * super, const char * dir, int xpos, int ypos);
-		~LLNode();
-		void updateNodeContents();
-		void printColumnToWindow();
+public:
+  LLNode(WINDOW * super,char * dir, int xpos, int ypos);
+  ~LLNode();
+  void updateNodeContents();
+  void printColumnToWindow();
+  char *getCwd();
+  void setCwd(char * newcwd);
+  LLNode * prev;
+  LLNode * next;
 
-		const char *getCwd();
-		LLNode * prev;
-		LLNode * next;
+private:
+  static int getContent(char *** content, char * directory);
+  static short freeContent(char *** content, int contentCount);
+  static int getLongestStrIndex(char ** strs, int numStrs);
+  const int symbolLen = 3; // symbol space for "|\n\r"
+  const char * symbol = "|\n\r"; // What will be printed at the end of each line
+  char *prettyFormatStrings(char ** strings, int numstrs);
 
-	private:
-		static int getContent(char *** content, const char * directory);
-		static short freeContent(char *** content, int contentCount);
-		static int getLongestStrIndex(char ** strs, int numStrs);
-		const int symbolLen = 3; // symbol space for "|\n\r"
-		const char * symbol = "|\n\r"; // What will be printed at the end of each line
-		char *prettyFormatStrings(char ** strings, int numstrs);
-
-		WINDOW * curwin;
-		const char * cwd;
-		char ** contents; // Array of strings which the column will contain
-		// coordinates in the terminal window
-		int x;
-		int y;
-		int nlines; // Describes the length of contents first dimension (number of lines)
-		int ncols;
+  WINDOW * curwin;
+  char * cwd;
+  char ** contents; // Array of strings which the column will contain
+  // coordinates in the terminal window
+  int x;
+  int y;
+  int nlines; // Describes the length of contents first dimension (number of lines)
+  int ncols;
 };
 
 #endif

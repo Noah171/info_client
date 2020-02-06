@@ -1,7 +1,7 @@
 #ifndef LLWINDOW
 #define LLWINDOW
 
-#define BUFFLEN 100
+#define LLHEAD_BUFFLEN 128
 
 #include "LLNode.hpp"
 

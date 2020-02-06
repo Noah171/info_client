@@ -1,5 +1,5 @@
 #ifndef CURSOR
-#define CURSORStream Avatar
+#define CURSOR
 
 #include <ncurses.h>
 #include "LLHead.hpp"
@@ -7,15 +7,16 @@
 class Cursor{
 
 public:
-	Cursor(WINDOW *x, int y, WINDOW *startWin);
-	~Cursor();
-	void goUp();
-	void goDown();
-	void goRight();
-	void goLeft();
-
+  Cursor(int x, int y);
+  ~Cursor();
+  void goUp();
+  void goDown();
+  void goRight();
+  void goLeft();
+  int getY();
+  int getX();
 private:
-	int y;
-	WINDOW *curwin; // basically the cursor's 'x' value in the cartesian plane
+  int y;
+  int x;
 };
 #endif

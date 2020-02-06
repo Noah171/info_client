@@ -4,7 +4,7 @@ LLHead::LLHead(){
 	this->first = NULL;
 	this->last = NULL;
 	this->size = 0;
-}// end LLHead
+}// end LLHeadp
 
 LLHead::~LLHead(){
 	deleteLList();
