@@ -41,5 +41,4 @@ private:
   int nlines; // Describes the length of contents first dimension (number of lines)
   int ncols;
 };
-
 #endif

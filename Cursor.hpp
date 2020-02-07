@@ -2,7 +2,6 @@
 #define CURSOR
 
 #include <ncurses.h>
-#include "LLHead.hpp"
 
 class Cursor{
 

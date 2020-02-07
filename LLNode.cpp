@@ -15,7 +15,7 @@ LLNode::~LLNode(){
   freeContent(&this->contents, nlines);
 } // end ~LLNode
 
-// Updates the node contents by going to its associated content source (files in a directory
+// Updates the node contents by going to its associated content source (files in a directory 
 // or a file's content)
 void LLNode::updateNodeContents(){
   int successp = OK;

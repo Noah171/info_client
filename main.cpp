@@ -1,4 +1,3 @@
-#include "Cursor.hpp"
 #include "media_info.hpp"
 #include "LLHead.hpp"
 
@@ -25,7 +24,6 @@ int main(int argc, char * argv[] ){
   WINDOW * super = NULL;
   int nlines = 0;
   int ncols = 0;
-  Cursor cursor(0, 0);
   LLHead windowll;
 
   /** Window initialization **/
@@ -39,6 +37,7 @@ int main(int argc, char * argv[] ){
   nonl();
   intrflush(stdscr, FALSE);
   keypad(stdscr,TRUE);
+  curs_set(0); // sets the cursor to invisible
   // Gets the current terminal size and stores it in nlines and ncols, because it is a macro
   // nlines and ncols can be changed directly without pointers.
   getmaxyx(super, nlines,ncols);
@@ -52,21 +51,22 @@ int main(int argc, char * argv[] ){
       getmaxyx(super,nlines,ncols);
       /* A) RESIZE SUBWINDOWS AND CONTENTS */
     }
-    sleep(1);
+    windowll.update();
     windowll.print();
-    // adjust curor position based on input
+    inp = getch();
+    // adjust cursor position based on input
     switch(inp){
     case 'h':
-      cursor.goLeft();
+      windowll.getCursor()->goLeft();
       break;
     case 'l':
-      cursor.goRight();
+      windowll.getCursor()->goRight();
       break;
     case 'j':
-      cursor.goDown();
+      windowll.getCursor()->goDown();
       break;
     case 'k':
-      cursor.goUp();
+      windowll.getCursor()->goUp();
       break;
     }
   }
