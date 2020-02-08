@@ -14,6 +14,7 @@ public:
   void goLeft();
   int getY();
   int getX();
+  void update(int curMaxY, int curMaxX);
 private:
   int y;
   int x;

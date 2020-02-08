@@ -98,7 +98,7 @@ void LLHead::update(){
   for(int i = 0; i < this->size; ++i ){
     LLNode *curNode = this->getNode(i);
     curNode->updateNodeContents();
-    cursor->update(nlines);
+    cursor->update(this->getNode(cursor->getX())->getNLines(), this->size);
   }
 }
 Cursor * LLHead::getCursor(){ return this->cursor; }

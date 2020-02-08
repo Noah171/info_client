@@ -23,6 +23,7 @@ public:
   void setCwd(char * newcwd);
   LLNode * prev;
   LLNode * next;
+  int getNLines();
 
 private:
   static int getContent(char *** content, char * directory);
