@@ -167,8 +167,6 @@ int LLNode::getLongestStrIndex(char ** strings, int numStrs)
   }
   return index;
 } // end getLongestStr
-
 // Getter for cwd
-char * LLNode::getCwd() {
-  return this->cwd;
-}
+char * LLNode::getCwd() { return this->cwd; }
+int LLNode::getNLines(){ return this->nlines; }

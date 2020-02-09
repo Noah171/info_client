@@ -3,7 +3,6 @@
 #define LLHEAD_BUFFLEN 128
 
 #include "LLNode.hpp"
-#include "Cursor.hpp"
 #include <ncurses.h>
 #include <string.h>
 #include <cstdlib>
@@ -19,12 +18,11 @@ public:
   void delnode(int i);
   void print(); 
   LLNode *getNode(int i);
-  Cursor *getCursor();
+  void update();
 private:
   // attributes
   LLNode *first;
   LLNode *last;
-  Cursor *cursor;
   int size;
 };
 #endif

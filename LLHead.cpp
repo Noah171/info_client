@@ -94,11 +94,21 @@ void LLHead::print(){
     curNode->updateNodeContents();
   }
 } // end print
-void LLHead::update(){
+void LLHead::update() {
+  LLNode * temp = NULL;
   for(int i = 0; i < this->size; ++i ){
     LLNode *curNode = this->getNode(i);
     curNode->updateNodeContents();
-    cursor->update(this->getNode(cursor->getX())->getNLines(), this->size);
+    // updating the cursor requires the max lines of the current linked list node
+  }
+  if ((temp = this->getNode(cursor->getX())) != NULL){
+    cursor->update(this->getNode(cursor->getX())->getNLines(),
+		   this->size);
+  }
+  else{
+    // the -1 indicates that the current x value is invalid and must be updated
+    // in order to obatin a maximum y value
+    cursor->update(-1,this->size);
   }
 }
 Cursor * LLHead::getCursor(){ return this->cursor; }

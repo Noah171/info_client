@@ -9,6 +9,8 @@
 #include <thread>
 #include <errno.h>
 #include <unistd.h>
+#define DIRECTORY "/home/ncs/.local/media_list/"
+#define EMPTY_DIR 2 
 /* TODO:
  * 
  */
@@ -25,6 +27,7 @@ int main(int argc, char * argv[] ){
   int nlines = 0;
   int ncols = 0;
   LLHead windowll;
+  Cursor cursor;
 
   /** Window initialization **/
   // This ensures our prefered locale settings are used (like character sets)
@@ -46,29 +49,13 @@ int main(int argc, char * argv[] ){
   // Get contents of media directory because that will decide the size of media window
   /** Main loop where things will actually happen **/
   for(int i = 0; 1; ++i){
-    char inp = 0;
     if(is_term_resized(nlines, ncols)){
       getmaxyx(super,nlines,ncols);
       /* A) RESIZE SUBWINDOWS AND CONTENTS */
     }
     windowll.update();
+    cursor.update(windowll);
     windowll.print();
-    inp = getch();
-    // adjust cursor position based on input
-    switch(inp){
-    case 'h':
-      windowll.getCursor()->goLeft();
-      break;
-    case 'l':
-      windowll.getCursor()->goRight();
-      break;
-    case 'j':
-      windowll.getCursor()->goDown();
-      break;
-    case 'k':
-      windowll.getCursor()->goUp();
-      break;
-    }
   }
   return endwin();
 } // end main

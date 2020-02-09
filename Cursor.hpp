@@ -2,6 +2,7 @@
 #define CURSOR
 
 #include <ncurses.h>
+#include "LLHead.hpp"
 
 class Cursor{
 
@@ -14,7 +15,7 @@ public:
   void goLeft();
   int getY();
   int getX();
-  void update(int curMaxY, int curMaxX);
+  void update(LLHead * llhead);
 private:
   int y;
   int x;
