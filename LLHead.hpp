@@ -24,5 +24,7 @@ private:
   LLNode *first;
   LLNode *last;
   int size;
+  int cursorX;
+  int cursorY;
 };
 #endif

@@ -1,5 +1,5 @@
-#include "media_info.hpp"
 #include "LLHead.hpp"
+#include "Cursor.hpp"
 
 #include <curses.h> // general curses stuff
 #include <locale.h> // for setlocale() in main()
@@ -27,7 +27,7 @@ int main(int argc, char * argv[] ){
   int nlines = 0;
   int ncols = 0;
   LLHead windowll;
-  Cursor cursor;
+  Cursor cursor(0,0);
 
   /** Window initialization **/
   // This ensures our prefered locale settings are used (like character sets)
@@ -48,13 +48,14 @@ int main(int argc, char * argv[] ){
   windowll.appendNode(firstWindow);
   // Get contents of media directory because that will decide the size of media window
   /** Main loop where things will actually happen **/
+  windowll.update();
+  windowll.print();
   for(int i = 0; 1; ++i){
     if(is_term_resized(nlines, ncols)){
       getmaxyx(super,nlines,ncols);
-      /* A) RESIZE SUBWINDOWS AND CONTENTS */
     }
+    cursor.update(&windowll);
     windowll.update();
-    cursor.update(windowll);
     windowll.print();
   }
   return endwin();

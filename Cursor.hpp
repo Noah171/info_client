@@ -19,5 +19,7 @@ public:
 private:
   int y;
   int x;
+  int curMaxX;
+  int curMaxY;
 };
 #endif

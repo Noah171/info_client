@@ -4,12 +4,11 @@ LLHead::LLHead(){
   this->first = NULL;
   this->last = NULL;
   this->size = 0;
-  this->cursor = new Cursor(0,0);
+
 }// end LLHeadp
 
 LLHead::~LLHead(){
   deleteLList();
-  delete(this->cursor);
 } // end ~LLHead
 
 void LLHead::appendNode(LLNode * newNode){
@@ -82,8 +81,9 @@ void LLHead::delnode(int index){
 LLNode *LLHead::getNode(int index){
   if(index >= this->size || index < 0){ return NULL; }
   LLNode *temp = this->first;
-  for(int i = 0; i < index; ++i)
+  for(int i = 0; i < index; ++i){
     temp = temp->next;
+  }
   return temp;
 } // end getNode
 
@@ -91,24 +91,14 @@ LLNode *LLHead::getNode(int index){
 void LLHead::print(){
   for(int i = 0; i < this->size; ++i ){
     LLNode *curNode = this->getNode(i);
-    curNode->updateNodeContents();
+    curNode->printColumnToWindow();
   }
 } // end print
 void LLHead::update() {
-  LLNode * temp = NULL;
   for(int i = 0; i < this->size; ++i ){
     LLNode *curNode = this->getNode(i);
     curNode->updateNodeContents();
-    // updating the cursor requires the max lines of the current linked list node
-  }
-  if ((temp = this->getNode(cursor->getX())) != NULL){
-    cursor->update(this->getNode(cursor->getX())->getNLines(),
-		   this->size);
-  }
-  else{
-    // the -1 indicates that the current x value is invalid and must be updated
-    // in order to obatin a maximum y value
-    cursor->update(-1,this->size);
+    break;
   }
 }
-Cursor * LLHead::getCursor(){ return this->cursor; }
+

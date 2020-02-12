@@ -27,7 +27,8 @@ void LLNode::updateNodeContents(){
   this->nlines = LLNode::getContent(&this->contents, cwd);
   longestIndex = LLNode::getLongestStrIndex(contents,nlines);
   this->ncols = strlen(this->contents[longestIndex]);
-  successp = wresize(this->curwin, this->nlines, this->ncols + LLNode::symbolLen+1);
+  // plus one to nlines because the final entry also has a newline character
+  successp = wresize(this->curwin, this->nlines+1, this->ncols + LLNode::symbolLen+1);
   if(successp != OK){
     printf("Coudn't resize!\n");
   }
@@ -37,7 +38,7 @@ void LLNode::updateNodeContents(){
 void LLNode::printColumnToWindow(){
   char * str = prettyFormatStrings(this->contents, this->nlines);
   int successp = OK;
-  wclear(this->curwin);
+  werase(this->curwin);
   successp = waddnstr(this->curwin, str, strlen(str));
   if (successp != OK){
     printf("Something's wrong in printColumnToWindow with waddnstr!\n\r");
