@@ -18,7 +18,10 @@ public:
   void delnode(int i);
   void print(); 
   LLNode *getNode(int i);
+  int getSize();
   void update();
+  void setCursorY(int y);
+  void setCursorX(int x);
 private:
   // attributes
   LLNode *first;

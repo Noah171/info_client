@@ -18,7 +18,9 @@ public:
   LLNode(WINDOW * super,char * dir, int xpos, int ypos);
   ~LLNode();
   void updateNodeContents();
+  void updateNodeContents(int y);
   void printColumnToWindow();
+  void printColumnToWindow(int y);
   char *getCwd();
   void setCwd(char * newcwd);
   LLNode * prev;
@@ -32,7 +34,6 @@ private:
   const int symbolLen = 3; // symbol space for "|\n\r"
   const char * symbol = "|\n\r"; // What will be printed at the end of each line
   char *prettyFormatStrings(char ** strings, int numstrs);
-
   WINDOW * curwin;
   char * cwd;
   char ** contents; // Array of strings which the column will contain

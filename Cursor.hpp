@@ -16,6 +16,7 @@ public:
   int getY();
   int getX();
   void update(LLHead * llhead);
+  void fixBounds(LLHead * head);
 private:
   int y;
   int x;

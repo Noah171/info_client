@@ -11,13 +11,16 @@ LLHead::~LLHead(){
   deleteLList();
 } // end ~LLHead
 
+// appends newnode to the linked list
 void LLHead::appendNode(LLNode * newNode){
+  // If it is the first node take appropriate action
   if(this->size == 0){
     this->first = newNode;
     this->last = newNode;
     newNode->next = NULL;
     newNode->prev = NULL;
   }
+  // otherwise append it in the standard way
   else{
     LLNode *temp = this->last;
     this->last = newNode;
@@ -28,11 +31,13 @@ void LLHead::appendNode(LLNode * newNode){
   this->size++;
 }// end appendNode
 
+// Deletes the linked list
 void LLHead::deleteLList(){
   int llsize = this->size;
   for(int i = 0; i < llsize; ++i){
-    delnode(i);
+    delnode(i); 
   }
+  this->size = 0;
 }// end deleteLList
 
 // Deletes a node in the linked list of the object and index i
@@ -79,6 +84,7 @@ void LLHead::delnode(int index){
 
 // Simply returns the node at an index, analogous to array[i]
 LLNode *LLHead::getNode(int index){
+  // If the index exceeds the bounds return null
   if(index >= this->size || index < 0){ return NULL; }
   LLNode *temp = this->first;
   for(int i = 0; i < index; ++i){
@@ -94,11 +100,28 @@ void LLHead::print(){
     curNode->printColumnToWindow();
   }
 } // end print
+// updates every node member in the linked list
 void LLHead::update() {
   for(int i = 0; i < this->size; ++i ){
     LLNode *curNode = this->getNode(i);
-    curNode->updateNodeContents();
-    break;
+    if(this->cursorX == i){
+      curNode->updateNodeContents(this->cursorY);
+    }
+    else{
+      curNode->updateNodeContents();
+    }
   }
-}
+}// end update
 
+// Size getter
+int LLHead::getSize(){
+  return this->size;
+}// end getSize
+
+void LLHead::setCursorY(int y){
+  this->cursorY = y;
+}// end setCursorY
+
+void LLHead::setCursorX(int x){
+  this->cursorX = x;
+}// end setCursorX

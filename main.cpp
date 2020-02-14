@@ -20,8 +20,6 @@
  * B) Note that the way refresh works is odd.
  */
 
-int getLongestStr(char ** strs, int numStrsn);
-
 int main(int argc, char * argv[] ){
   WINDOW * super = NULL;
   int nlines = 0;

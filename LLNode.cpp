@@ -34,6 +34,21 @@ void LLNode::updateNodeContents(){
   }
 } // end updateNodeContents
 
+void LLNode::printColumnToWindow(int y){
+  // If the y is out of bounds return
+  if(y < 0 || y >= nlines){ return; }
+  char * str = prettyFormatStrings(this->contents, this->nlines);
+  int successp = OK;
+  werase(this->curwin);
+  successp = waddnstr(this->curwin, str, strlen(str));
+  if (successp != OK){
+    printf("Something's wrong in printColumnToWindow with waddnstr!\n\r");
+    printf("curwin %p str %p errno %d\n", this->curwin, str, successp);
+  }
+  wrefresh(this->curwin);
+  free(str);
+}
+
 // Prints column to this nodes curwin
 void LLNode::printColumnToWindow(){
   char * str = prettyFormatStrings(this->contents, this->nlines);
@@ -169,5 +184,9 @@ int LLNode::getLongestStrIndex(char ** strings, int numStrs)
   return index;
 } // end getLongestStr
 // Getter for cwd
-char * LLNode::getCwd() { return this->cwd; }
-int LLNode::getNLines(){ return this->nlines; }
+char * LLNode::getCwd() {
+  return this->cwd;
+}
+int LLNode::getNLines(){
+  return this->nlines;
+}
