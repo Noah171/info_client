@@ -97,7 +97,12 @@ LLNode *LLHead::getNode(int index){
 void LLHead::print(){
   for(int i = 0; i < this->size; ++i ){
     LLNode *curNode = this->getNode(i);
-    curNode->printColumnToWindow();
+	if(i == cursorX){
+		curNode->printColumnToWindow(i);
+	}
+	else {
+    	curNode->printColumnToWindow();
+	}
   }
 } // end print
 // updates every node member in the linked list

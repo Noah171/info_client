@@ -42,7 +42,7 @@ void Cursor::update(LLHead * head){
   }
   fixBounds(head);
   head->setCursorX(this->x);
-  head->setCursorY(this->y);		     
+  head->setCursorY(this->y);
 }
 
 void Cursor::fixBounds(LLHead * head){
